@@ -1,3 +1,6 @@
+管理系统前端模块
+Vue CLI4 + VUE全家桶+ axios + iview用户界面库
+
 # study_car
 
 ## Project setup

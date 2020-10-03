@@ -39,7 +39,7 @@
             },
             {
               type: 'string',
-              min: 6,
+              min: 3,
               max: 15,
               message: '密码长度不能少于6位,大于15位',
               trigger: 'blur'
@@ -50,21 +50,25 @@
     },
     methods: {
       getUserlist () {
+        //  存储this的指向
+        let _this = this
         // 预验证
-        this.$refs.formValidate.validate(async valid => {
-          if (!valid) {
-            return this.$Message.error('请输入正确的账号密码')
-          }
-          const Databess = await this.$axios.post('user', this.formItem)
-          // 判断登入状态
-          if (Databess.data.meta.status == 200) {
-            // 保存token
-            window.sessionStorage.setItem('token', Databess.data.data.UUID)
-            // 也保存name
-            window.sessionStorage.setItem('name', Databess.data.data.name)
-            this.$Message.success('登入成功')
-            await this.$router.push('/home')
-          }
+        this.$refs.formValidate.validate(valid => {
+          if (!valid) return
+          this.$axios.post('user', this.formItem).then(function (res) {
+            console.log(res)
+            if (res.data.meta.status == 200) {
+              // 保存token
+              window.sessionStorage.setItem('token', res.data.data.UUID)
+              // 也保存name
+              window.sessionStorage.setItem('name', res.data.data.name)
+              _this.$Message.success('登入成功')
+              _this.$router.push('/home')
+            }
+          }).catch(function (err) {
+            console.log(err)
+            _this.$Message.error('登入失败，请检查账号密码')
+          })
         })
       }
     }

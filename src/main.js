@@ -9,10 +9,9 @@ import VueWechatTitle from 'vue-wechat-title';
 
 Vue.config.productionTip = false
 
-axios.defaults.baseURL = 'http://localhost:4000/api/'
+axios.defaults.baseURL = 'http://127.0.0.1:4000/api/'
 // 请求头
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
-
 //  请求拦截
 axios.interceptors.request.use(config => {
   // 将token保存到config里做预处理 为请求头对象 添加token验证authorization字段

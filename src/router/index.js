@@ -6,7 +6,10 @@ const home = () => import(/* webpackChunkName: "login_home" */ '../components/Ho
 const user = () => import(/* webpackChunkName: "login_home" */ '../components/User/user.vue')
 const register = () => import(/* webpackChunkName: "login_home" */ '../components/inFormation/register.vue')
 const studentList = () => import(/* webpackChunkName: "login_home" */ '../components/inFormation/studentList.vue')
+const perRegister = () => import(/* webpackChunkName: "login_home" */ '../components/inFormation/perRegister.vue')
 const expend = () => import(/* webpackChunkName: "login_home" */ '../components/finance/expend.vue')
+const income = () => import(/* webpackChunkName: "login_home" */ '../components/finance/income.vue')
+const infostat = () => import(/* webpackChunkName: "login_home" */ '../components/finance/infostat.vue')
 
 Vue.use(VueRouter)
 const router = new VueRouter({
@@ -50,7 +53,28 @@ const router = new VueRouter({
           meta:{
             title: '后台管理系统'
           }
+        },
+        {
+          path: '/perRegister',
+          component:perRegister,
+          meta: {
+            title: '后台管理系统'
+          }
+        },{
+        path: '/income',
+          component:income,
+          meta: {
+          title: '后台管理系统'
+          }
+        },
+        {
+          path: '/infostat',
+          component:infostat,
+          meta: {
+            title: '后台管理系统'
+          }
         }
+
       ]
     }
   ]

@@ -23,13 +23,10 @@
             </div>
           </Menu>
         </Sider>
-        <Content>
+        <Content class="content_div">
           <router-view></router-view>
         </Content>
       </Layout>
-      <Footer style="height: 45px">
-        <div class="content_footer">Test</div>
-      </Footer>
     </Layout>
   </div>
 </template>
@@ -80,6 +77,10 @@
   * {
     margin: 0px;
     padding: 0px;
+  }
+  .content_div{
+    width: 100%;
+    height: 100%;
   }
 
   .Header {
@@ -142,13 +143,5 @@
     right: 30px;
   }
 
-  .content_footer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-color: #619cf5;
-  }
 
 </style>

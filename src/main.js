@@ -10,6 +10,7 @@ import VueWechatTitle from 'vue-wechat-title';
 Vue.config.productionTip = false
 
 axios.defaults.baseURL = 'http://127.0.0.1:4000/api/'
+// axios.defaults.baseURL = 'http://121.40.227.153:5050/api/'
 // 请求头
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
 //  请求拦截

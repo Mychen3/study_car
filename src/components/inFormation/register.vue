@@ -31,7 +31,7 @@
     </div>
     <!--分页-->
     <div class="content-page">
-      <Page :total="count" :current="current" @on-change="handleSizeChange" show-total show-sizer @on-page-size-change="pagechange"/>
+      <Page :total="count" :current.sync="current" @on-change="handleSizeChange" show-total  show-sizer  @on-page-size-change="pagechange"  :page-size="pagesize" />
     </div>
     <!-- 模态框-->
     <Modal v-model="modal1" ref="modelRef" footer-hide width="800px">
@@ -114,6 +114,8 @@
 </template>
 <script>
   export default {
+
+
     data () {
       return {
         tableHeight:545,
@@ -121,7 +123,7 @@
         // 页码
         current: 1,
         // 分页条数
-        pagesize: 10,
+        pagesize: 15,
         // 分页总数
         count: null,
         columns: [
@@ -372,14 +374,16 @@
         this.current = newcurrent
         this.getDatalist()
       },
-
-
+      // 设置动态高度
+      hadetab(){
+        this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 60
+      }
     },
     created () {
       this.getDatalist()
+      this.hadetab()
     },
     mounted () {
-      this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 60
       //window.innerHeight是浏览器可用高度，this.$refs.table.$el.offsetTop是表格距离浏览器可用高度顶部的距离
     },
     // watch:{

@@ -4,7 +4,7 @@
       <div class="fonts"><h2>后台管理系统</h2></div>
       <Form class="login_from" ref="formValidate" :model="formItem" :rules="ruleValidate" :label-width="80">
         <FormItem label="账号" prop="user_name">
-          <Input v-model="formItem.user_name" placeholder="请输入账号"></Input>
+          <Input prefix="ios-contact"  v-model="formItem.user_name" placeholder="请输入账号"></Input>
         </FormItem>
         <FormItem label="密码" prop="user_passwrod">
           <Input v-model="formItem.user_passwrod" placeholder="请输入密码" type="password"></Input>
@@ -83,7 +83,7 @@
     background: url("../assets/c1.jpg");
     background-size: 100% 100%;
     //字体抗锯齿
-    -webkit-font-smoothing: antialiased
+    -webkit-font-smoothing: antialiased;
   }
 
   .login_box1 {

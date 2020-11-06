@@ -17,8 +17,11 @@
     <div class="content-btn">
       <div class="content-btnleft"><Input search enter-button placeholder="手机号查询" @on-search="cellphone "/></div>
       <div class="content-btnleft"><Input search enter-button placeholder="姓名查询" @on-search="queryName"/></div>
-      <div class="content-btnleft"><Input search enter-button placeholder="科目查询" @on-search="subJect"/></div>
-
+      <Select v-model="course" style="width:200px; margin-left:20px; margin-right: 10px">
+        <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+      </Select>
+      <Button type="primary" @click="subJect">查询</Button>
+      <Button type="primary" style="margin-left: 10px" @click="reset">重置</Button>
     </div>
     <!--表格-->
     <div class="content-table">
@@ -31,25 +34,40 @@
           <span v-show="row.student_cost === 0"><Icon type="ios-checkmark-circle" size="20" color="LimeGreen"/></span>
           <span v-show="row.student_cost === 1"><Icon type="ios-close-circle" size="20" color="Crimson"/></span>
         </template>
+        <template slot-scope="{row}" slot="edit">
+          <div style="display: flex;justify-content: space-between">
+            <Button type="primary" @click="editQuery(row)">编辑</Button>
+            <Button type="warning" @click="delQuery(row)">删除</Button>
+          </div>
+        </template>
       </Table>
     </div>
     <!--分页-->
     <div class="content-page">
-      <Page :total="count" :current="current" @on-change="handleSizeChange" show-total show-sizer
-            @on-page-size-change="pagechange"/>
+      <Page :total="count" :current.sync="current" @on-change="handleSizeChange" show-total :page-size="pagesize" show-sizer  @on-page-size-change="pagechange" />
     </div>
+    <!--编辑 -->
+    <editList v-show="editShow" ref="editListRef"></editList>
   </div>
 </template>
 <script>
+  import editList from './components/editList'
   export default {
+    components: {
+      editList
+    },
     data () {
       return {
+        modelEdit: false,
+        editShow: false,
+        // 科目
+        course: '',
         tableHeight: 545,
         modal1: false,
         // 页码
         current: 1,
         // 分页条数
-        pagesize: 10,
+        pagesize: 15,
         // 分页总数
         count: null,
         columns: [
@@ -111,7 +129,7 @@
             title: '费用缴纳',
             key: 'student_cost',
             align: 'center',
-            slot:'cost',
+            slot: 'cost',
             width: '100px'
           },
           {
@@ -120,25 +138,89 @@
             align: 'center',
             slot: 'sex',
             width: '80px'
+          },
+          {
+            title: '操作',
+            align: 'center',
+            slot: 'edit',
+            width: '180px'
           }
         ],
         Databeas: [],
+        cityList: [
+          {
+            value: '科目一',
+            label: '科目一',
+          },
+          {
+            value: '科目二',
+            label: '科目二'
+          },
+          {
+            value: '科目三',
+            label: '科目三'
+          },
+          {
+            value: '科目四',
+            label: '科目四'
+          }
+
+        ]
       }
     },
+
     methods: {
-      pagechange (newpage) {
+      // 设置每页显示页数
+      pagechange(newpage){
         this.pagesize = newpage
         this.getDatalist()
       },
+      // 删除
+      delQuery (row) {
+        this.$Modal.confirm({
+          title: '您确定删除吗？',
+          content:'删除后无法恢复，请慎重考虑',
+          onOk:()=>{
+            this.$axios({
+              url:'delstudent',
+              method:'post',
+              data:{
+                GUID:row.GUID
+              }
+            }).then(res=>{
+                     if (res.status == 200){
+                       this.$Message.success('删除成功')
+                       this.getDatalist()
+                     }
+                }).catch(err=>{
+                 this.$Message.error('删除失败')
+            })
+          },
+          onCancel: () => {
+          }
+        })
+      },
+      // 重置
+      reset () {
+        this.course = ''
+        this.getDatalist()
+      },
+
+      //  编辑模态框
+      editQuery (row) {
+        this.editShow = true
+        this.$refs.editListRef.open(row)
+      },
+
       // 关闭模态框
       closeA () {
         this.modal1 = false
         this.$refs.ValidateRef.resetFields()
-
       },
       btn () {
         this.modal1 = true
       },
+      // 查询全部
       async getDatalist () {
         const Databess = await this.$axios.get('student', {
           params: {
@@ -152,6 +234,7 @@
         }
       },
       // 分页事件
+
       handleSizeChange (newcurrent) {
         this.current = newcurrent
         this.getDatalist()
@@ -190,13 +273,13 @@
         }
       },
       // 科目查询
-      async subJect (value) {
-        if (!value) {
+      async subJect () {
+        if (!this.course) {
           this.$Message.error('请输入科目')
         } else {
           let Databeas = await this.$axios.get('student', {
             params: {
-              student_schedule: value
+              student_schedule: this.course
             }
           })
           if (Databeas.status == 200) {
@@ -205,13 +288,18 @@
           }
         }
       },
+      // 设置动态高度
+      hadetab () {
+        this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 60
+      }
     },
     created () {
       this.getDatalist()
+      this.hadetab()
     },
 
     mounted () {
-      this.tableHeight = window.innerHeight - this.$refs.table.$el.offsetTop - 60
+
       //window.innerHeight是浏览器可用高度，this.$refs.table.$el.offsetTop是表格距离浏览器可用高度顶部的距离
     },
     // watch:{
